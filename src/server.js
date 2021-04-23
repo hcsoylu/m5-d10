@@ -13,9 +13,9 @@ const server = express();
 
 const port = process.env.PORT || 5001;
 
-const whitelist = [process.env.FE_URL_DEV, process.env.FE_URL_PROD];
+//const whitelist = [process.env.FE_URL_DEV, process.env.FE_URL_PROD];
 
-const corsOptions = {
+/*const corsOptions = {
   origin: function (origin, next) {
     if (whitelist.indexOf(origin) !== -1) {
       console.log("ORIGIN ", origin);
@@ -26,7 +26,7 @@ const corsOptions = {
       next(new Error("Not allowed by CORS"));
     }
   },
-};
+};*/
 
 server.use(cors());
 server.use(express.json());
