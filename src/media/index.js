@@ -1,10 +1,23 @@
 import express from "express";
 import uniqid from "uniqid";
 import { check, validationResult } from "express-validator";
+import multer from "multer";
+import fs from "fs/promises";
+import path from "path";
+import axios from "axios";
+const { dirname, join } = path;
+
+const { writeFile } = fs;
+
+const upload = multer({});
 
 const router = express.Router();
 
-import { getMedias, writeMedias } from "../lib/fs-tools.js";
+import {
+  getMedias,
+  writeMedias,
+  writeMoviesPictures,
+} from "../lib/fs-tools.js";
 
 const movieValidation = [
   check("Title").exists().withMessage("The media's title is required"),
@@ -213,6 +226,56 @@ router.delete("/:imdbID/reviews/:id", async (req, res, next) => {
     res.send("deleted");
   } catch (error) {
     console.log(error);
+    next(error);
+  }
+});
+
+router.post(
+  "/:imdbID/upload",
+  multer().single("moviePoster"),
+  async (req, res, next) => {
+    try {
+      console.log(req.file);
+      await writeMoviesPictures(req.file.originalname, req.file.buffer);
+
+      const { originalname } = req.file;
+
+      const medias = await getMedias();
+      const updatedDb = medias.map((media) =>
+        media.imdbID === req.params.imdbID
+          ? {
+              ...media,
+              Poster: `${req.protocol}://${req.hostname}:${process.env.PORT}/${originalname}`,
+              lastUpdated: new Date(),
+            }
+          : media
+      );
+
+      await writeMedias(updatedDb);
+
+      res.status(201).send("pic is uploaded");
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
+  }
+);
+
+router.get("/omdb/:omdbID", async (req, res, next) => {
+  try {
+    const url = `http://www.omdbapi.com/?apikey=${process.env.OMDB_API_KEY}&i=`;
+    const response = await axios.get(url + req.params.omdbID);
+    const data = response.data;
+    console.log(response);
+    if (data) {
+      res.send(data);
+    } else {
+      const err = new Error();
+      err.httpStatusCode = 404;
+      next(err);
+    }
+  } catch (error) {
+    console.log("ERROR!", error);
     next(error);
   }
 });

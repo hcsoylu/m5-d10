@@ -11,7 +11,9 @@
         "id": "3v7x8semscknu468em",
         "createdAt": "2021-04-23T09:31:10.222Z"
       }
-    ]
+    ],
+    "Poster": "http://localhost:5000/Push_van_cat.jpg",
+    "lastUpdated": "2021-04-23T13:44:58.387Z"
   },
   {
     "Title": "Batman Forever 5",
@@ -56,6 +58,7 @@
         "createdAt": "2021-04-23T09:31:42.154Z",
         "updatedAt": "2021-04-23T10:23:59.017Z"
       }
-    ]
+    ],
+    "lastUpdated": "2021-04-23T13:27:03.173Z"
   }
 ]

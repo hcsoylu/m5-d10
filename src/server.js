@@ -1,6 +1,8 @@
 import express from "express";
 import cors from "cors";
 import mediaRoutes from "./media/index.js";
+import { fileURLToPath } from "url";
+import { dirname, join } from "path";
 import {
   notFoundHandler,
   badRequestHandler,
@@ -9,24 +11,18 @@ import {
 
 import listEndpoints from "express-list-endpoints";
 
+const currentWorkingFile = fileURLToPath(import.meta.url);
+const currentWorkingDirectory = dirname(currentWorkingFile);
+const publicFolderDirectory = join(currentWorkingDirectory, "../public/movies");
+
 const server = express();
 
 const port = process.env.PORT || 5001;
 
-const whitelist = [process.env.FE_URL_DEV, process.env.FE_URL_PROD];
-
-const corsOptions = {
-  origin: function (origin, callback) {
-    if (whitelist.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      next(new Error("Not allowed by CORS"));
-    }
-  },
-};
-
-server.use(cors(corsOptions));
+server.use(cors());
 server.use(express.json());
+
+server.use(express.static(publicFolderDirectory));
 
 server.use("/media", mediaRoutes);
 
