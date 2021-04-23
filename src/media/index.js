@@ -280,4 +280,22 @@ router.get("/omdb/:omdbID", async (req, res, next) => {
   }
 });
 
+router.get("/search", async (req, res, next) => {
+  try {
+    const medias = await getMedias();
+
+    if (req.query && req.query.Title) {
+      const filteredMedia = medias.filter(
+        (media) =>
+          media.hasOwnProperty("Title") && media.Title === req.query.Title
+      );
+
+      res.send(filteredMedia);
+    }
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+});
+
 export default router;
