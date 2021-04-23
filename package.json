@@ -9,6 +9,10 @@
     "dev": "nodemon -e js -r dotenv/config ./src/server.js",
     "start": "node ./src/server.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hcsoylu/m5-d10.git"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",

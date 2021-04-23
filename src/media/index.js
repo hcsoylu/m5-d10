@@ -191,6 +191,7 @@ router.put("/:imdbID/reviews/:id", async (req, res, next) => {
     next(error);
   }
 });
+
 router.delete("/:imdbID/reviews/:id", async (req, res, next) => {
   try {
     let medias = await getMedias();
